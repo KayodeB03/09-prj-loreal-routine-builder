@@ -46,6 +46,9 @@
       <div class="selected-products">
         <h2>Selected Products</h2>
         <div id="selectedProductsList"></div>
+        <div id="selectedActions" style="display: none; margin-bottom: 12px">
+          <button id="clearAllBtn" class="clear-btn">Clear All</button>
+        </div>
         <button id="generateRoutine" class="generate-btn">
           <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Routine
         </button>
@@ -57,7 +60,6 @@
         <div id="chatWindow" class="chat-window"></div>
 
         <form id="chatForm" class="chat-form">
-          <label for="userInput" class="visually-hidden">Message</label>
           <input
             id="userInput"
             name="userInput"
@@ -68,7 +70,6 @@
           />
           <button type="submit" id="sendBtn">
             <i class="fa-solid fa-paper-plane"></i>
-            <span class="visually-hidden">Send</span>
           </button>
         </form>
       </section>

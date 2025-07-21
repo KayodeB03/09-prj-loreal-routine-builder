@@ -47,7 +47,6 @@ body {
   padding: 16px;
   font-size: 18px;
   border: 2px solid #000;
-  border-radius: 8px;
   cursor: pointer;
   background-color: white;
   font-weight: 500;
@@ -62,7 +61,6 @@ body {
 .chatbox {
   margin: 40px 0;
   border: 2px solid #000;
-  border-radius: 8px;
   padding: 26px;
 }
 
@@ -77,8 +75,16 @@ body {
   line-height: 1.5;
   height: 250px;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   background: #fafafa;
+  border-radius: 0;
   margin-bottom: 20px;
+  /* mimic a phone chat area */
+  border: 1.5px solid #e3a535;
+  min-height: 180px;
+  box-shadow: 0 2px 12px #e3a53522;
 }
 
 /* placeholder message */
@@ -108,7 +114,7 @@ body {
 
 .chat-form input:focus {
   outline: none;
-  border-bottom-color: #000;
+  border-bottom-color: #e3a535;
 }
 
 .chat-form button {
@@ -127,7 +133,7 @@ body {
 }
 
 .chat-form button:hover {
-  background: #666666;
+  background: #ff003b;
 }
 
 .chat-form button:focus {
@@ -135,17 +141,88 @@ body {
   outline-offset: 2px;
 }
 
-/* visually hidden */
-.visually-hidden {
+/* Chat bubbles - text message style */
+.chat-bubble {
+  max-width: 75%;
+  padding: 13px 18px;
+  border-radius: 22px;
+  font-size: 16px;
+  line-height: 1.7;
+  word-break: break-word;
+  margin-bottom: 0;
+  box-shadow: 0 2px 8px #0001;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-bubble.user {
+  align-self: flex-end;
+  background: #ff003b;
+  color: #fff;
+  border-bottom-right-radius: 6px;
+  border-top-right-radius: 6px;
+  border-bottom-left-radius: 22px;
+  border-top-left-radius: 22px;
+  margin-right: 6px;
+}
+
+.chat-bubble.user::after {
+  content: "";
   position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+  right: -10px;
+  bottom: 8px;
+  width: 14px;
+  height: 18px;
+  background: #ff003b;
+  border-bottom-right-radius: 12px 18px;
+  transform: rotate(25deg);
+  z-index: 1;
+}
+
+.chat-bubble.assistant {
+  align-self: flex-start;
+  background: #fff;
+  color: #333;
+  border-bottom-left-radius: 6px;
+  border-top-left-radius: 6px;
+  border-bottom-right-radius: 22px;
+  border-top-right-radius: 22px;
+  border: 1.5px solid #e3a535;
+  margin-left: 6px;
+}
+
+.chat-bubble.assistant::after {
+  content: "";
+  position: absolute;
+  left: -10px;
+  bottom: 8px;
+  width: 14px;
+  height: 18px;
+  background: #fff;
+  border-bottom-left-radius: 12px 18px;
+  border: 1.5px solid #e3a535;
+  border-right: none;
+  transform: rotate(-25deg);
+  z-index: 1;
+}
+
+/* Sender labels above bubbles */
+.chat-label {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 2px;
+  margin-left: 2px;
+  color: #e3a535;
+  letter-spacing: 0.5px;
+}
+
+.chat-bubble.user .chat-label {
+  color: #fffbe9;
+}
+
+.chat-bubble.assistant .chat-label {
+  color: #e3a535;
 }
 
 /* footer */
@@ -167,7 +244,7 @@ body {
 }
 
 .site-footer a:hover {
-  color: #666666;
+  color: #ff003b;
 }
 
 /* products grid */
@@ -182,10 +259,18 @@ body {
   flex: 0 1 calc(33.333% - 14px);
   border: 1px solid #ccc;
   padding: 15px;
-  border-radius: 4px;
   display: flex;
   gap: 15px;
   min-height: 160px;
+  cursor: pointer;
+  transition: border 0.2s, background 0.2s;
+  position: relative;
+}
+
+/* Highlight selected product cards */
+.product-card.selected {
+  border: 2px solid #ff003b;
+  background: #ffe5ec;
 }
 
 .product-card img {
@@ -213,12 +298,25 @@ body {
   color: #666;
 }
 
+/* Optional: smooth fade for description box */
+.product-desc-float {
+  transition: opacity 0.15s;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.product-card:hover .product-desc-float,
+.product-card:focus-within .product-desc-float {
+  display: block !important;
+  opacity: 1;
+  pointer-events: auto;
+}
+
 /* selected products */
 .selected-products {
   margin: 40px 0;
   padding: 20px;
   border: 2px solid #000;
-  border-radius: 8px;
 }
 
 .selected-products h2 {
@@ -234,22 +332,51 @@ body {
 
 .generate-btn {
   width: 100%;
-  margin-top: 20px;
   padding: 16px;
   font-size: 18px;
   font-weight: 500;
   color: #fff;
   background: #000;
   border: none;
-  border-radius: 8px;
   cursor: pointer;
   transition: background 0.3s;
 }
 
 .generate-btn:hover {
-  background: #666;
+  background: #ff003b;
 }
 
 .generate-btn i {
   margin-right: 8px;
+}
+
+.selected-products .remove-btn {
+  margin-left: 10px;
+  background: #ff003b;
+  color: #fff;
+  border: none;
+  padding: 2px 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.selected-products .remove-btn:hover {
+  background: #e3a535;
+}
+
+.clear-btn {
+  width: 100%;
+  padding: 16px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #fff;
+  background: #000;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.clear-btn:hover {
+  background: #ff003b;
 }
